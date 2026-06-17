@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Танцевальные уроки</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            color: #f0f0f0;
+        }
+
+        /* Шапка */
+        .header {
+            background: #050505;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            border-bottom: 2px solid #b22222;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #b22222, #6a0dad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            cursor: pointer;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #b22222, #6a0dad);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Страницы */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Герой */
+        .hero {
+            text-align: left;
+            padding: 60px 40px;
+            background: linear-gradient(135deg, #1a0a2a, #0a0a0a);
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .filters-section {
+            background: #111;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #b22222;
+            text-align: left;
+        }
+
+        .style-filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            background: #1a1a1a;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            color: #f0f0f0;
+        }
+
+        .filter-chip.active {
+            background: linear-gradient(135deg, #b22222, #6a0dad);
+            color: white;
+        }
+
+        .filter-chip:hover {
+            transform: scale(1.05);
+            background: #b22222;
+        }
+
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .lesson-card {
+            background: #111;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-image {
+            height: 200px;
+            background: linear-gradient(135deg, #b22222, #6a0dad);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .style-badge {
+            background: #b22222;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .level-badge {
+            background: #6a0dad;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .teacher {
+            color: #b22222;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #b22222;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #2a2a2a;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #b22222, #6a0dad);
+            width: 0%;
+        }
+
+        .teachers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .teacher-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 20px;
+            background: #0a0a0a;
+            cursor: pointer;
+        }
+
+        .teacher-card:hover {
+            background: #1a0a2a;
+        }
+
+        .teacher-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #b22222, #6a0dad);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #111;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-content input, .modal-content select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #1a1a1a;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+        }
+
+        .modal-content button {
+            background: linear-gradient(135deg, #b22222, #6a0dad);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 30px;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .card-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .card-item {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card-item.selected {
+            background: #2a0a2a;
+        }
+
+        /* Видеоплеер */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 30px;
+        }
+
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .description-box, .homework-box {
+            background: #111;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .lesson-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .meta-item {
+            background: #1a1a1a;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #2a0a2a;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+            .header { padding: 15px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo" onclick="showPage('main')">💃 Танцевальные уроки</div>
+    <div class="nav-buttons">
+        <button class="nav-btn" onclick="showPage('cabinet')">👤 Личный кабинет</button>
+        <button class="nav-btn" onclick="openLoginModal()">🚪 Вход</button>
+    </div>
+</div>
+
+<!-- ГЛАВНАЯ СТРАНИЦА -->
+<div id="mainPage" class="page active">
+    <div class="hero">
+        <h1>Танцуй с лучшими педагогами</h1>
+        <p>Онлайн-уроки по танцам для любого уровня. Начни танцевать уже сегодня!</p>
+    </div>
+    <div class="container">
+        <div class="filters-section">
+            <h2 class="section-title">🎵 Выбери стиль танца</h2>
+            <div class="style-filters" id="styleFilters"></div>
+        </div>
+        <div class="lessons-grid" id="lessonsGrid"></div>
+        <div class="filters-section">
+            <h2 class="section-title">👨‍🏫 Наши педагоги</h2>
+            <div class="teachers-grid" id="teachersGrid"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ЛИЧНЫЙ КАБИНЕТ -->
+<div id="cabinetPage" class="page">
+    <div class="container">
+        <div style="background:#111; border-radius:20px; padding:30px; margin-bottom:30px;">
+            <h2 class="section-title">👤 Профиль</h2>
+            <p id="userInfo" style="font-size:18px;"></p>
+        </div>
+        <div style="background:#111; border-radius:20px; padding:30px; margin-bottom:30px;">
+            <h2 class="section-title">💳 Мои карты</h2>
+            <div id="cardsList" class="teachers-grid"></div>
+        </div>
+        <div style="background:#111; border-radius:20px; padding:30px;">
+            <h2 class="section-title">📚 Мои уроки</h2>
+            <div id="purchasedLessonsList" class="lessons-grid"></div>
+        </div>
+    </div>
+</div>
+
+<!-- СТРАНИЦА ПРОСМОТРА УРОКА -->
+<div id="watchPage" class="page">
+    <div class="container">
+        <div class="video-wrapper">
+            <video id="lessonVideo" controls>
+                <source src="" type="video/mp4">
+            </video>
+        </div>
+        <div id="watchContent"></div>
+        <button class="nav-btn" style="margin-top:20px;" onclick="showPage('cabinet')">← Вернуться в личный кабинет</button>
+    </div>
+</div>
+
+<!-- СТРАНИЦА ОПЛАТЫ -->
+<div id="paymentPage" class="page">
+    <div class="container" style="max-width:500px; margin:40px auto;">
+        <div style="background:#111; border-radius:20px; padding:40px;">
+            <h2 class="section-title">💳 Оплата урока</h2>
+            <div class="price" id="paymentLessonInfo" style="font-size:24px; margin-bottom:20px;"></div>
+            <h3 style="color:#b22222; margin-bottom:15px;">💳 Сохранённые карты</h3>
+            <div id="paymentCardsList"></div>
+            <h3 style="color:#b22222; margin:20px 0 15px;">➕ Новая карта</h3>
+            <input type="text" id="newCardNumber" placeholder="Номер карты (16 цифр)" maxlength="19">
+            <div class="card-row">
+                <input type="text" id="newCardExpiry" placeholder="ММ/ГГ" maxlength="5">
+                <input type="text" id="newCardCvv" placeholder="CVV" maxlength="3">
+            </div>
+            <input type="text" id="newCardName" placeholder="Имя владельца">
+            <button class="nav-btn" style="width:100%; margin-top:20px;" onclick="processPayment()">✅ Оплатить</button>
+            <button class="nav-btn" style="width:100%; margin-top:10px; background:#333;" onclick="showPage('main')">← Вернуться к урокам</button>
+        </div>
+    </div>
+</div>
+
+<footer>© 2025 Танцевальные уроки. Танцуй с удовольствием!</footer>
+
+<!-- Модальное окно входа -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <h2 style="color:#b22222; margin-bottom:20px;">Вход в личный кабинет</h2>
+        <input type="text" id="loginName" placeholder="Ваше имя">
+        <input type="email" id="loginEmail" placeholder="Email">
+        <button onclick="login()">Войти</button>
+        <button onclick="closeLoginModal()" style="background:#333;">Закрыть</button>
+        <p style="margin-top:15px; font-size:12px; color:#666;">Демо: любое имя и email</p>
+    </div>
+</div>
+
+<script>
+    // ========== ДАННЫЕ ==========
+    const lessons = [
+        { id: 1, name: "Hip-hop для начинающих", style: "Hip-hop", level: "Начинающий", teacher: "Роман Дмитренко", price: 25, videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", description: "Изучим базовые движения хип-хопа: грув, шаги, изоляцию корпуса. Этот урок поможет тебе почувствовать ритм.", homework: "1. Повторить связку из 8 счетов 10 раз.\n2. Записать видео с выполненной связкой.\n3. Отметить меня в Instagram @danceplatform." },
+        { id: 2, name: "Jazz-funk", style: "Jazz-funk", level: "Средний", teacher: "Александра Саук", price: 10, videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", description: "Эмоциональный и пластичный стиль. Работаем над растяжкой, волнами и музыкальностью.", homework: "1. Выучить комбинацию из видео.\n2. Сделать акцент на эмоции и подачу." },
+        { id: 3, name: "Crump энергия", style: "Crump", level: "Начинающий", teacher: "Вадим Whiphead", price: 10, videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFunflies.mp4", description: "Агрессивный и мощный стиль. Учимся контролировать мышцы, делать акценты и паузы.", homework: "1. Тренировать тряску в груди и руках каждый день по 10 минут.\n2. Придумать свой короткий фрагмент." },
+        { id: 4, name: "Contemporary душа", style: "Contemporary", level: "Продвинутый", teacher: "Анна Тарасенко", price: 10, videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", description: "Современный танец через дыхание и чувства. Работа в партере, перекаты, импровизация.", homework: "1. Придумать свой фрагмент под любую музыку на 30 секунд.\n2. Записать и прислать на проверку." },
+        { id: 5, name: "Hip-hop продвинутый", style: "Hip-hop", level: "Продвинутый", teacher: "ZUB", price: 25, videoUrl: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", description: "Сложные связки, работа с музыкальными акцентами, фристайл.", homework: "1. Повторить 3 связки из урока и соединить в свой фристайл.\n2. Выложить видео в TikTok с хештегом #danceplatform" }
+    ];
+
+    const teachers = [
+        { name: "Роман Дмитренко", style: "Hip-hop", experience: "12 лет", avatar: "🕺" },
+        { name: "Александра Саук", style: "Jazz-funk", experience: "6 лет", avatar: "💃" },
+        { name: "Вадим Whiphead", style: "Crump", experience: "9 лет", avatar: "🔥" },
+        { name: "Анна Тарасенко", style: "Contemporary", experience: "15 лет", avatar: "✨" },
+        { name: "ZUB", style: "Hip-hop", experience: "8 лет", avatar: "🕺" }
+    ];
+
+    // Пользователь
+    let currentUser = { isLoggedIn: false, name: "", email: "", purchasedLessons: [], savedCards: [] };
+    let currentStyle = "all";
+    let pendingPurchase = null;
+    let selectedCardIndex = null;
+    let currentWatchingLesson = null;
+
+    // ========== НАВИГАЦИЯ ==========
+    function showPage(pageName) {
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        if (pageName === 'main') document.getElementById('mainPage').classList.add('active');
+        if (pageName === 'cabinet') { document.getElementById('cabinetPage').classList.add('active'); renderCabinet(); }
+        if (pageName === 'watch') document.getElementById('watchPage').classList.add('active');
+        if (pageName === 'payment') document.getElementById('paymentPage').classList.add('active');
+    }
+
+    // ========== ВХОД ==========
+    function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+    function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+
+    function login() {
+        const name = document.getElementById('loginName').value;
+        const email = document.getElementById('loginEmail').value;
+        if (name && email) {
+            currentUser = { isLoggedIn: true, name, email, purchasedLessons: currentUser.purchasedLessons || [], savedCards: currentUser.savedCards || [] };
+            localStorage.setItem('danceUser', JSON.stringify(currentUser));
+            alert(`Добро пожаловать, ${name}!`);
+            closeLoginModal();
+            renderMain();
+            renderCabinet();
+        } else { alert('Введите имя и email'); }
+    }
+
+    // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
+    function isLessonPurchased(lessonId) {
+        return currentUser.isLoggedIn && currentUser.purchasedLessons.some(l => l.lessonId === lessonId);
+    }
+
+    function getProgress(lessonId) {
+        const purchased = currentUser.purchasedLessons.find(l => l.lessonId === lessonId);
+        return purchased ? purchased.progress : 0;
+    }
+
+    function buyLesson(lessonId, price, name) {
+        if (!currentUser.isLoggedIn) {
+            alert("Пожалуйста, войдите в аккаунт!");
+            openLoginModal();
+            return;
+        }
+        if (isLessonPurchased(lessonId)) {
+            alert("Урок уже куплен!");
+            return;
+        }
+        pendingPurchase = { lessonId, price, name };
+        renderPaymentPage();
+        showPage('payment');
+    }
+
+    function watchLesson(lessonId) {
+        if (isLessonPurchased(lessonId)) {
+            currentWatchingLesson = lessons.find(l => l.id === lessonId);
+            renderWatchPage();
+            showPage('watch');
+        } else {
+            alert("Сначала оплатите урок!");
+        }
+    }
+
+    // ========== ОТРИСОВКА ГЛАВНОЙ ==========
+    function renderMain() {
+        renderFilters();
+        renderLessons();
+        renderTeachers();
+    }
+
+    function renderFilters() {
+        const styles = [...new Set(lessons.map(l => l.style))];
+        const filtersDiv = document.getElementById('styleFilters');
+        if (!filtersDiv) return;
+        filtersDiv.innerHTML = `<button class="filter-chip ${currentStyle === 'all' ? 'active' : ''}" data-style="all">Все стили</button>`;
+        styles.forEach(style => {
+            filtersDiv.innerHTML += `<button class="filter-chip ${currentStyle === style ? 'active' : ''}" data-style="${style}">${style}</button>`;
+        });
+        document.querySelectorAll('.filter-chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentStyle = btn.getAttribute('data-style');
+                renderMain();
+            });
+        });
+    }
+
+    function renderLessons() {
+        const grid = document.getElementById('lessonsGrid');
+        if (!grid) return;
+        let filtered = currentStyle === "all" ? lessons : lessons.filter(l => l.style === currentStyle);
+        if (filtered.length === 0) { grid.innerHTML = '<div style="text-align:center; padding:40px;">😢 Нет уроков</div>'; return; }
+        grid.innerHTML = filtered.map(lesson => {
+            const purchased = isLessonPurchased(lesson.id);
+            const progress = getProgress(lesson.id);
+            return `
+                <div class="lesson-card" onclick="watchLesson(${lesson.id})">
+                    <div class="card-image">${getIconForStyle(lesson.style)}</div>
+                    <div class="card-content">
+                        <div class="card-title">${lesson.name}</div>
+                        <div class="card-meta">
+                            <span class="style-badge">${lesson.style}</span>
+                            <span class="level-badge">${lesson.level}</span>
+                        </div>
+                        <div class="teacher">👨‍🏫 ${lesson.teacher}</div>
+                        <div class="price">${lesson.price} BYN</div>
+                        ${purchased ? `<div class="progress-bar"><div class="progress-fill" style="width: ${progress}%"></div></div><small>Прогресс: ${progress}%</small>` : ''}
+                        <button class="nav-btn" style="width:100%; margin-top:10px;" onclick="event.stopPropagation(); buyLesson(${lesson.id}, ${lesson.price}, '${lesson.name}')">${purchased ? '✅ Куплено' : '💰 Купить'}</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function renderTeachers() {
+        const grid = document.getElementById('teachersGrid');
+        if (!grid) return;
+        grid.innerHTML = teachers.map(teacher => `
+            <div class="teacher-card" onclick="filterByTeacher('${teacher.style}')">
+                <div class="teacher-avatar">${teacher.avatar}</div>
+                <div class="teacher-name">${teacher.name}</div>
+                <div class="teacher-style">${teacher.style} • ${teacher.experience}</div>
+            </div>
+        `).join('');
+    }
+
+    function filterByTeacher(style) {
+        currentStyle = style;
+        renderMain();
+        document.querySelector('.filters-section')?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function getIconForStyle(style) {
+        const icons = { 'Hip-hop': '🕺', 'Jazz-funk': '💃', 'Crump': '🔥', 'Contemporary': '✨' };
+        return icons[style] || '💃';
+    }
+
+    // ========== ЛИЧНЫЙ КАБИНЕТ ==========
+    function renderCabinet() {
+        if (!currentUser.isLoggedIn) {
+            document.getElementById('userInfo').innerHTML = '⚠️ Вы не вошли в аккаунт. <button class="nav-btn" onclick="openLoginModal()" style="margin-left:10px;">Войти</button>';
+            document.getElementById('cardsList').innerHTML = '<div style="text-align:center; padding:40px;">Войдите в аккаунт</div>';
+            document.getElementById('purchasedLessonsList').innerHTML = '<div style="text-align:center; padding:40px;">Войдите в аккаунт</div>';
+            return;
+        }
+        document.getElementById('userInfo').innerHTML = `👋 ${currentUser.name}<br>📧 ${currentUser.email}`;
+        
+        if (currentUser.savedCards.length === 0) {
+            document.getElementById('cardsList').innerHTML = '<div style="text-align:center; padding:40px;">Нет сохранённых карт</div>';
+        } else {
+            document.getElementById('cardsList').innerHTML = currentUser.savedCards.map((card, idx) => `
+                <div class="teacher-card" style="text-align:left;">
+                    <div>💳 **** ${card.last4}</div>
+                    <div>📅 ${card.expiry}</div>
+                    <div>👤 ${card.name}</div>
+                    <button class="nav-btn" style="margin-top:10px; background:#b22222;" onclick="deleteCard(${idx})">Удалить</button>
+                </div>
+            `).join('');
+        }
+        
+        const purchased = currentUser.purchasedLessons;
+        if (purchased.length === 0) {
+            document.getElementById('purchasedLessonsList').innerHTML = '<div style="text-align:center; padding:40px;">Нет купленных уроков</div>';
+        } else {
+            document.getElementById('purchasedLessonsList').innerHTML = purchased.map(p => {
+                const lesson = lessons.find(l => l.id === p.lessonId);
+                if (!lesson) return '';
+                return `
+                    <div class="lesson-card" onclick="watchLesson(${lesson.id})">
+                        <div class="card-image" style="height:120px;">${getIconForStyle(lesson.style)}</div>
+                        <div class="card-content">
+                            <div class="card-title">${lesson.name}</div>
+                            <div class="teacher">👨‍🏫 ${lesson.teacher}</div>
+                            <div class="progress-bar"><div class="progress-fill" style="width: ${p.progress || 0}%"></div></div>
+                            <div>Прогресс: ${p.progress || 0}%</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+
+    function deleteCard(index) {
+        currentUser.savedCards.splice(index, 1);
+        localStorage.setItem('danceUser', JSON.stringify(currentUser));
+        renderCabinet();
+    }
+
+    // ========== СТРАНИЦА ОПЛАТЫ ==========
+    function renderPaymentPage() {
+        if (!pendingPurchase) return;
+        document.getElementById('paymentLessonInfo').innerHTML = `${pendingPurchase.name}<br>${pendingPurchase.price} BYN`;
+        renderPaymentCards();
+    }
+
+    function renderPaymentCards() {
+        const container = document.getElementById('paymentCardsList');
+        if (currentUser.savedCards.length === 0) {
+            container.innerHTML = '<p style="color:#999;">Нет сохранённых карт</p>';
+            return;
+        }
+        container.innerHTML = currentUser.savedCards.map((card, idx) => `
+            <div class="card-item ${selectedCardIndex === idx ? 'selected' : ''}" onclick="selectPaymentCard(${idx})">
+                <span>💳 **** ${card.last4}</span>
+                <span>${card.expiry}</span>
+            </div>
+        `).join('');
+    }
+
+    function selectPaymentCard(idx) {
+        selectedCardIndex = idx;
+        renderPaymentCards();
+    }
+
+    function processPayment() {
+        if (!pendingPurchase) { alert('Ошибка'); return; }
+        
+        if (selectedCardIndex !== null) {
+            // используем сохранённую карту
+        } else {
+            const cardNumber = document.getElementById('newCardNumber').value.replace(/\s/g, '');
+            const cardExpiry = document.getElementById('newCardExpiry').value;
+            const cardCvv = document.getElementById('newCardCvv').value;
+            const cardName = document.getElementById('newCardName').value;
+            if (!cardNumber || cardNumber.length !== 16 || !cardExpiry || !cardCvv || !cardName) {
+                alert('Заполните все поля карты');
+                return;
+            }
+            currentUser.savedCards.push({ last4: cardNumber.slice(-4), expiry: cardExpiry, name: cardName });
+        }
+        
+        if (!currentUser.purchasedLessons.some(l => l.lessonId === pendingPurchase.lessonId)) {
+            currentUser.purchasedLessons.push({ lessonId: pendingPurchase.lessonId, progress: 0 });
+        }
+        
+        localStorage.setItem('danceUser', JSON.stringify(currentUser));
+        alert(`✅ Оплачено! Урок "${pendingPurchase.name}" добавлен в личный кабинет.`);
+        pendingPurchase = null;
+        selectedCardIndex = null;
+        document.getElementById('newCardNumber').value = '';
+        document.getElementById('newCardExpiry').value = '';
+        document.getElementById('newCardCvv').value = '';
+        document.getElementById('newCardName').value = '';
+        renderMain();
+        renderCabinet();
+        showPage('cabinet');
+    }
+
+    // ========== СТРАНИЦА ПРОСМОТРА ==========
+    function renderWatchPage() {
+        if (!currentWatchingLesson) return;
+        const videoElement = document.getElementById('lessonVideo');
+        videoElement.src = currentWatchingLesson.videoUrl;
+        videoElement.load();
+        
+        const progress = getProgress(currentWatchingLesson.id);
+        
+        videoElement.onloadedmetadata = function() {
+            const savedProgress = getProgress(currentWatchingLesson.id);
+            if (savedProgress > 0 && savedProgress < 100) {
+                videoElement.currentTime = (savedProgress / 100) * videoElement.duration;
+            }
+        };
+        
+        videoElement.ontimeupdate = function() {
+            if (videoElement.duration) {
+                const percent = (videoElement.currentTime / videoElement.duration) * 100;
+                const currentProgress = getProgress(currentWatchingLesson.id);
+                if (percent > currentProgress && percent <= 100) {
+                    const purchased = currentUser.purchasedLessons.find(l => l.lessonId === currentWatchingLesson.id);
+                    if (purchased) {
+                        purchased.progress = Math.floor(percent);
+                        localStorage.setItem('danceUser', JSON.stringify(currentUser));
+                    }
+                }
+            }
+        };
+        
+        document.getElementById('watchContent').innerHTML = `
+            <div class="lesson-title" style="font-size:28px; color:#b22222; margin-bottom:15px;">${currentWatchingLesson.name}</div>
+            <div class="lesson-meta">
+                <span class="meta-item">👨‍🏫 ${currentWatchingLesson.teacher}</span>
+                <span class="meta-item">🎵 ${currentWatchingLesson.style}</span>
+                <span class="meta-item">📊 ${currentWatchingLesson.level}</span>
+            </div>
+            <div class="progress-section" style="background:#111; border-radius:20px; padding:20px; margin-bottom:20px;">
+                <div class="progress-bar"><div class="progress-fill" style="width: ${getProgress(currentWatchingLesson.id)}%"></div></div>
+                <div>Прогресс: ${getProgress(currentWatchingLesson.id)}%</div>
+            </div>
+            <div class="description-box">
+                <h3 style="color:#b22222; margin-bottom:15px;">📖 Описание урока</h3>
+                <p>${currentWatchingLesson.description}</p>
+            </div>
+            <div class="homework-box">
+                <h3 style="color:#b22222; margin-bottom:15px;">📝 Домашнее задание</h3>
+                <p style="white-space:pre-line;">${currentWatchingLesson.homework}</p>
+            </div>
+        `;
+    }
+
+    function formatCardNumber(input) {
+        let value = input.value.replace(/\D/g, '');
+        if (value.length > 16) value = value.slice(0,16);
+        let formatted = '';
+        for (let i = 0; i < value.length; i++) {
+            if (i > 0 && i % 4 === 0) formatted += ' ';
+            formatted += value[i];
+        }
+        input.value = formatted;
+    }
+
+    // Инициализация
+    function loadUser() {
+        const saved = localStorage.getItem('danceUser');
+        if (saved) {
+            try { currentUser = JSON.parse(saved); } catch(e) {}
+        }
+        if (!currentUser.purchasedLessons) currentUser.purchasedLessons = [];
+        if (!currentUser.savedCards) currentUser.savedCards = [];
+        renderMain();
+        renderCabinet();
+    }
+
+    document.getElementById('newCardNumber')?.addEventListener('input', function() { formatCardNumber(this); });
+    document.getElementById('newCardExpiry')?.addEventListener('input', function(e) {
+        let val = e.target.value.replace(/\D/g, '');
+        if (val.length >= 2) val = val.slice(0,2) + '/' + val.slice(2,4);
+        e.target.value = val.slice(0,5);
+    });
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('loginModal');
+        if (event.target === modal) closeLoginModal();
+    }
+
+    loadUser();
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Просмотр урока — Танцевальные уроки</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            color: #f0f0f0;
+        }
+        .header {
+            background: #050505;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            border-bottom: 2px solid #b22222;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #b22222, #6a0dad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            cursor: pointer;
+        }
+        .nav-btn {
+            background: linear-gradient(135deg, #b22222, #6a0dad);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .video-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 20px;
+            background: #000;
+        }
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+        .lesson-info {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .lesson-title {
+            font-size: 32px;
+            color: #b22222;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .lesson-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #2a0a2a;
+        }
+        .meta-item {
+            background: #1a1a1a;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        .description-box, .homework-box {
+            background: #111;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .description-box h3, .homework-box h3 {
+            color: #b22222;
+            margin-bottom: 15px;
+        }
+        .progress-section {
+            background: #111;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #2a2a2a;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #b22222, #6a0dad);
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+        .back-link {
+            text-align: left;
+            margin: 30px 20px;
+        }
+        .back-link a {
+            color: #b22222;
+            text-decoration: none;
+        }
+        @media (max-width: 768px) {
+            .lesson-title { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo" onclick="window.location.href='index.html'">💃 Танцевальные уроки</div>
+        <button class="nav-btn" onclick="window.location.href='cabinet.html'">👤 Личный кабинет</button>
+    </div>
+
+    <div class="video-container">
+        <div class="video-wrapper">
+            <video id="lessonVideo" controls>
+                <source src="" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+            </video>
+        </div>
+    </div>
+
+    <div class="lesson-info" id="lessonInfo"></div>
+
+    <div class="back-link">
+        <a href="cabinet.html">← Вернуться в личный кабинет</a>
+    </div>
+
+    <script>
+        const lessonsData = [
+            { id: 1, name: "Hip-hop для начинающих", teacher: "Роман Дмитренко", style: "Hip-hop", level: "Начинающий", description: "Изучим базовые движения хип-хопа: грув, шаги, изоляцию корпуса. Этот урок поможет тебе почувствовать ритм и научиться двигаться уверенно.", homework: "1. Повторить связку из 8 счетов 10 раз.\n2. Записать видео с выполненной связкой.\n3. Отметить меня в Instagram @danceplatform." },
+            { id: 2, name: "Jazz-funk", teacher: "Александра Саук", style: "Jazz-funk", level: "Средний", description: "Эмоциональный и пластичный стиль. Работаем над растяжкой, волнами и музыкальностью. Добавим женственность и драматизм.", homework: "1. Выучить комбинацию из видео.\n2. Сделать акцент на эмоции и подачу.\n3. Попробовать танцевать под разную музыку." },
+            { id: 3, name: "Crump энергия", teacher: "Вадим Whiphead", style: "Crump", level: "Начинающий", description: "Агрессивный и мощный стиль. Учимся контролировать мышцы, делать акценты и паузы. Выплесни эмоции через танец!", homework: "1. Тренировать тряску в груди и руках каждый день по 10 минут.\n2. Придумать свой короткий фрагмент." },
+            { id: 4, name: "Contemporary душа", teacher: "Анна Тарасенко", style: "Contemporary", level: "Продвинутый", description: "Современный танец через дыхание и чувства. Работа в партере, перекаты, импровизация. Танец от сердца.", homework: "1. Придумать свой фрагмент под любую музыку на 30 секунд.\n2. Записать и прислать на проверку." },
+            { id: 5, name: "Hip-hop продвинутый", teacher: "ZUB", style: "Hip-hop", level: "Продвинутый", description: "Сложные связки, работа с музыкальными акцентами, фристайл. Для тех кто уже уверенно танцует.", homework: "1. Повторить 3 связки из урока и соединить в свой фристайл.\n2. Выложить видео в TikTok с хештегом #danceplatform" }
+        ];
+
+        let currentUser = { isLoggedIn: false, purchasedLessons: [] };
+        let currentLesson = null;
+        let videoProgress = 0;
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function loadLesson() {
+            const lessonId = getQueryParam('lesson') || localStorage.getItem('currentLesson');
+            if (!lessonId) {
+                document.getElementById('lessonInfo').innerHTML = '<p>Урок не выбран. Вернитесь в <a href="cabinet.html" style="color:#b22222;">личный кабинет</a>.</p>';
+                return;
+            }
+            
+            currentLesson = lessonsData.find(l => l.id == lessonId);
+            if (!currentLesson) {
+                document.getElementById('lessonInfo').innerHTML = '<p>Урок не найден.</p>';
+                return;
+            }
+            
+            const saved = localStorage.getItem('danceUser');
+            if (saved) {
+                try { currentUser = JSON.parse(saved); } catch(e) {}
+            }
+            if (!currentUser.purchasedLessons) currentUser.purchasedLessons = [];
+            
+            const purchased = currentUser.purchasedLessons.find(l => l.lessonId == lessonId);
+            if (!purchased) {
+                document.getElementById('lessonInfo').innerHTML = '<p style="color:#b22222;">⚠️ У вас нет доступа к этому уроку. <a href="index.html" style="color:#b22222;">Купите урок</a> чтобы смотреть.</p>';
+                return;
+            }
+            
+            videoProgress = purchased.progress || 0;
+            
+            const videoElement = document.getElementById('lessonVideo');
+            videoElement.src = `https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4`;
+            videoElement.load();
+            
+            videoElement.addEventListener('timeupdate', function() {
+                if (videoElement.duration) {
+                    const percent = (videoElement.currentTime / videoElement.duration) * 100;
+                    if (percent > videoProgress) {
+                        videoProgress = Math.floor(percent);
+                        purchased.progress = videoProgress;
+                        localStorage.setItem('danceUser', JSON.stringify(currentUser));
+                    }
+                }
+            });
+            
+            document.getElementById('lessonInfo').innerHTML = `
+                <div class="lesson-title">${currentLesson.name}</div>
+                <div class="lesson-meta">
+                    <span class="meta-item">👨‍🏫 ${currentLesson.teacher}</span>
+                    <span class="meta-item">🎵 ${currentLesson.style}</span>
+                    <span class="meta-item">📊 ${currentLesson.level}</span>
+                </div>
+                <div class="progress-section">
+                    <h3>📈 Ваш прогресс</h3>
+                    <div class="progress-bar"><div class="progress-fill" style="width: ${videoProgress}%"></div></div>
+                    <div>Просмотрено: ${videoProgress}%</div>
+                </div>
+                <div class="description-box">
+                    <h3>📖 Описание урока</h3>
+                    <p>${currentLesson.description}</p>
+                </div>
+                <div class="homework-box">
+                    <h3>📝 Домашнее задание</h3>
+                    <p style="white-space: pre-line;">${currentLesson.homework}</p>
+                </div>
+            `;
+        }
+
+        loadLesson();
+    </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата урока — Танцевальные уроки</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .payment-container {
+            max-width: 500px;
+            width: 100%;
+            background: #111;
+            border-radius: 20px;
+            padding: 40px;
+        }
+        h1 { color: #b22222; margin-bottom: 10px; text-align: left; }
+        .price { font-size: 32px; color: #b22222; margin-bottom: 30px; }
+        .card-section { margin-bottom: 30px; }
+        .saved-cards { margin-bottom: 20px; }
+        .card-item {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-item.selected { background: #2a0a2a; }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #1a1a1a;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+        }
+        .card-row { display: flex; gap: 10px; }
+        button {
+            background: linear-gradient(135deg, #b22222, #6a0dad);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 30px;
+            width: 100%;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover { opacity: 0.9; }
+        .back-link { text-align: left; margin-top: 20px; }
+        .back-link a { color: #b22222; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <h1>💳 Оплата урока</h1>
+        <div class="price" id="lessonInfo">Загрузка...</div>
+
+        <div class="card-section">
+            <h3 style="color: #b22222; margin-bottom: 15px;">💳 Сохранённые карты</h3>
+            <div id="savedCardsList" class="saved-cards"></div>
+            
+            <h3 style="color: #b22222; margin-bottom: 15px;">➕ Новая карта</h3>
+            <input type="text" id="cardNumber" placeholder="Номер карты (16 цифр)" maxlength="19">
+            <div class="card-row">
+                <input type="text" id="cardExpiry" placeholder="ММ/ГГ" maxlength="5">
+                <input type="text" id="cardCvv" placeholder="CVV" maxlength="3">
+            </div>
+            <input type="text" id="cardName" placeholder="Имя владельца">
+        </div>
+
+        <button onclick="processPayment()">✅ Оплатить</button>
+        <div class="back-link"><a href="index.html">← Вернуться к урокам</a></div>
+    </div>
+
+    <script>
+        let pendingPurchase = null;
+        let currentUser = { isLoggedIn: false, purchasedLessons: [], savedCards: [] };
+        let selectedCard = null;
+
+        function loadData() {
+            const saved = localStorage.getItem('danceUser');
+            if (saved) { try { currentUser = JSON.parse(saved); } catch(e) {} }
+            if (!currentUser.savedCards) currentUser.savedCards = [];
+            if (!currentUser.purchasedLessons) currentUser.purchasedLessons = [];
+            
+            const pending = localStorage.getItem('pendingPurchase');
+            if (pending) {
+                pendingPurchase = JSON.parse(pending);
+                document.getElementById('lessonInfo').innerHTML = `${pendingPurchase.name}<br><span style="font-size:20px;">${pendingPurchase.price} BYN</span>`;
+            } else {
+                document.getElementById('lessonInfo').innerHTML = 'Урок не выбран';
+            }
+            
+            renderSavedCards();
+        }
+
+        function renderSavedCards() {
+            const container = document.getElementById('savedCardsList');
+            if (currentUser.savedCards.length === 0) {
+                container.innerHTML = '<p style="color:#999;">Нет сохранённых карт</p>';
+                return;
+            }
+            container.innerHTML = currentUser.savedCards.map((card, idx) => `
+                <div class="card-item ${selectedCard === idx ? 'selected' : ''}" onclick="selectCard(${idx})">
+                    <span>💳 **** ${card.last4}</span>
+                    <span>${card.expiry}</span>
+                </div>
+            `).join('');
+        }
+
+        function selectCard(idx) {
+            selectedCard = idx;
+            renderSavedCards();
+        }
+
+        function formatCardNumber(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length > 16) value = value.slice(0,16);
+            let formatted = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) formatted += ' ';
+                formatted += value[i];
+            }
+            input.value = formatted;
+        }
+
+        function processPayment() {
+            if (!pendingPurchase) {
+                alert('Ошибка: урок не выбран');
+                return;
+            }
+            
+            let cardToSave = null;
+            if (selectedCard !== null) {
+                cardToSave = currentUser.savedCards[selectedCard];
+            } else {
+                const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+                const cardExpiry = document.getElementById('cardExpiry').value;
+                const cardCvv = document.getElementById('cardCvv').value;
+                const cardName = document.getElementById('cardName').value;
+                
+                if (!cardNumber || cardNumber.length !== 16 || !cardExpiry || !cardCvv || !cardName) {
+                    alert('Заполните все поля карты корректно');
+                    return;
+                }
+                
+                cardToSave = {
+                    last4: cardNumber.slice(-4),
+                    expiry: cardExpiry,
+                    name: cardName
+                };
+                
+                currentUser.savedCards.push(cardToSave);
+            }
+            
+            if (!currentUser.purchasedLessons.some(l => l.lessonId === pendingPurchase.lessonId)) {
+                currentUser.purchasedLessons.push({ 
+                    lessonId: pendingPurchase.lessonId, 
+                    progress: 0 
+                });
+            }
+            
+            localStorage.setItem('danceUser', JSON.stringify(currentUser));
+            localStorage.removeItem('pendingPurchase');
+            
+            alert(`✅ Оплата прошла успешно!\n\nУрок "${pendingPurchase.name}" добавлен в личный кабинет.`);
+            window.location.href = 'cabinet.html';
+        }
+
+        document.getElementById('cardNumber')?.addEventListener('input', function() { formatCardNumber(this); });
+        document.getElementById('cardExpiry')?.addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length >= 2) val = val.slice(0,2) + '/' + val.slice(2,4);
+            e.target.value = val.slice(0,5);
+        });
+        
+        loadData();
+    </script>
+</body>
+</html>
